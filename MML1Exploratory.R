@@ -16,6 +16,36 @@ attach(wonn)
 #means
 lapply(wonn,mean)
 
+
+means_list <- lapply(SportDFs, function(df) {
+  numeric_df <- df[sapply(df, is.numeric)]   # keep only numeric columns
+  sapply(numeric_df, mean, na.rm = TRUE)
+})
+
+
+overall_means <- colMeans(Data[, -which(names(Data) %in% c("sport","sex"))])
+overall_means
+
+aggregate(. ~ sport, data = Data[, -which(names(Data) == "sex")], mean)
+
+#manova
+# Split already done:
+SportDFs <- split(Data, Data[[1]])
+
+# But MANOVA uses the full dataset:
+Data$Sport <- factor(Data[[1]])   # make sure sport is a factor
+
+# Keep only numeric variables
+numeric_df <- Data[sapply(Data, is.numeric)]
+
+# Fit MANOVA
+manova_result <- manova(as.matrix(numeric_df) ~ Sport, data = Data)
+
+# Summary (Pillai's trace recommended)
+summary(manova_result, test = "Pillai")
+
+
+
 #histograms
 par(mfrow = c(4,3))
 lapply(names(wonn), function(col) {
