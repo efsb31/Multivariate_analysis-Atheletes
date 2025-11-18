@@ -20,7 +20,7 @@ lapply(wonn,mean)
 
 
 means_list <- lapply(SportDFs, function(df) {
-  numeric_df <- df[sapply(df, is.numeric)]   # keep only numeric columns
+  numeric_df <- df[sapply(df, is.numeric)]   
   sapply(numeric_df, mean, na.rm = TRUE)
 })
 
@@ -34,8 +34,8 @@ aggregate(. ~ sport, data = Data[, -which(names(Data) == "sex")], mean)
 # Split already done:
 SportDFs <- split(Data, Data[[1]])
 
-# But MANOVA uses the full dataset:
-Data$Sport <- factor(Data[[1]])   # make sure sport is a factor
+
+Data$Sport <- factor(Data[[1]])  
 
 # Keep only numeric variables
 numeric_df <- Data[sapply(Data, is.numeric)]
@@ -43,7 +43,7 @@ numeric_df <- Data[sapply(Data, is.numeric)]
 # Fit MANOVA
 manova_result <- manova(as.matrix(numeric_df) ~ Sport, data = Data)
 
-# Summary (Pillai's trace recommended)
+# Summary
 summary(manova_result, test = "Pillai")
 
 
@@ -71,7 +71,7 @@ dev.off()
 
 # pairs
 
-# ---- 1) Pairs plot ----
+# Pairs plot 
 png("pairs_plot.png", width = 24, height = 12, units = "in", res = 300)
 
 cols <- c(
@@ -132,7 +132,7 @@ cols <- c("B_ball" = "red",
           "T_Sprnt"    = "orange",
           "Gym"        = "purple")
 
-pairs(Data[,2:12],  # choose your numeric columns
+pairs(Data[,2:12], 
       col = cols[Data$sport],
       pch = 16)
 
@@ -178,7 +178,7 @@ wonn_norm <- as.data.frame(
 
 
 png("glyph_plot.png", width = 8, height = 4.5, units = "in", res = 300)
-par(mfrow=c(5,10), mar=c(0.1,0.5,0.1,0.5))   # 5 rows, 10 columns
+par(mfrow=c(5,10), mar=c(0.1,0.5,0.1,0.5))  
 
 for(i in 1:50){
   stars(wonn_norm[i, , drop=FALSE],
