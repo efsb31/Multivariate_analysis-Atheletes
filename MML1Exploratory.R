@@ -71,18 +71,27 @@ wonn_norm <- as.data.frame(
   lapply(wonn, function(x) (x - min(x)) / (max(x) - min(x)) + 0.2)
 )
 
-stars(wonn_norm,
-      draw.segments = TRUE,
-      col.segments = cols,
-      scale = FALSE,
-      labels = labels,
-      main = "Star Plot of Athletes Data")
+par(mfrow=c(4,13), mar=c(0.2,0.2,0.2,0.2))   # 5 rows, 10 columns
+
+for(i in 1:50){
+  stars(wonn_norm[i, , drop=FALSE],
+        draw.segments = TRUE,
+        col.segments = cols,
+        scale = FALSE,
+        labels = labels[i],
+        cex = 1.5,
+        main = "")
+}
+
+plot.new()   
 
 legend("topright",
+       #inset = c(0,-0.01),
        legend = colnames(wonn),
        fill = cols,
-       cex = 0.7,
+       cex = 1.3,
        border = NA)
+
 
 #cluster analysis
 
