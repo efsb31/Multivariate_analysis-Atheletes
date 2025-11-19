@@ -59,9 +59,9 @@ for(s in sports) {
   this_group <- scores[scores$sport == s, ]
   
   dataEllipse(this_group$Can1, this_group$Can2,
-              levels = 0.68,    # 1 SD-style ellipse
+              levels = 0.68,    # 1 SD
               add = TRUE,
-              col = cols[s],     # matching colour
+              col = cols[s],    
               plot.points = FALSE,
               lwd = 2)
   
@@ -86,7 +86,7 @@ text(loadings[,1] * arrow_scale,
 # Compute centroid positions for each sport
 centroids <- aggregate(cbind(Can1, Can2) ~ sport, data = scores, mean)
 
-# Add centroids as large black outlined points
+# Add centroids
 points(centroids$Can1, centroids$Can2,
        pch = 4, col = cols2,lwd = 4, cex = 2)
 
@@ -165,7 +165,7 @@ ylim <- range(scores$Can2) * 1.1
 png("CVA_new_aths_plot.png", width = 10, height = 5, units = "in", res = 300)
 
 par(mar = c(4,4,2,2))
-# --- Plot ---
+#Plot ---
 plot(scores$Can1, scores$Can2,
      col  = cols[ Data$sport ],
      pch  = 19,
@@ -209,7 +209,7 @@ text(loadings[,1] * arrow_scale,
 # Compute centroid positions for each sport
 centroids <- aggregate(cbind(Can1, Can2) ~ sport, data = scores, mean)
 
-# Add centroids as large black outlined points
+# Add centroids 
 points(centroids$Can1, centroids$Can2,
        pch = 4, col = cols2,lwd = 4, cex = 2)
 
