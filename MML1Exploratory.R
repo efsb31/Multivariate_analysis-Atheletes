@@ -6,8 +6,7 @@ library(corrplot)
 
 
 Data <- read.csv("C:\\Users\\erinb\\OneDrive\\uni\\Y3_uni\\MA3MML\\MML1\\ST3MMLsport.csv")
-
-Data <- Data %>% select(last_col(), everything())
+Data <- Data %>% select(sport, everything())
 
 wonn <- Data %>% select(-sex,-sport)
 
@@ -30,28 +29,35 @@ overall_means
 
 aggregate(. ~ sport, data = Data[, -which(names(Data) == "sex")], mean)
 
-#manova
-# Split already done:
-SportDFs <- split(Data, Data[[1]])
+
+#anova
+# Get all numeric variables 
+num_vars <- names(Data)[sapply(Data, is.numeric)]
+
+#One-way ANOVA for each numeric variable
+anova_pvals <- sapply(num_vars, function(v) {
+  form <- as.formula(paste(v, "~ sport"))
+  fit  <- aov(form, data = Data)
+  summary(fit)[[1]][["Pr(>F)"]][1]   # p-value for sport
+})
+
+# Put in a table
+anova_table <- data.frame(
+  variable = num_vars,
+  p_value  = anova_pvals,
+  row.names = NULL
+)
+
+anova_table
 
 
-Data$Sport <- factor(Data[[1]])  
-
-# Keep only numeric variables
-numeric_df <- Data[sapply(Data, is.numeric)]
-
-# Fit MANOVA
-manova_result <- manova(as.matrix(numeric_df) ~ Sport, data = Data)
-
-# Summary
-summary(manova_result, test = "Pillai")
 
 
 
 
 #histograms
 
-vars <- c("ferr", "bmi")
+vars <- names(Data)
 
 
 png("histogram_plot.png", width = 12, height = 3, units = "in", res = 300)
@@ -164,12 +170,12 @@ cols <- c(
   "#FFB300",  # orange (hg)
   "#FEE08B",  # light orange (ferr)
   
-  "#009900",  # green (deep, not neon)
+  "#009900",  # green 
   "#33CC33",  # light green
-  "#00A6A6",  # teal (distinct from both greens + blues)
+  "#00A6A6",  # teal
   "#0073E6",  # bright blue
   "#003399",  # deep blue
-  "#4B0082"   # indigo (high-contrast end of spectrum)
+  "#4B0082"   # indigo 
 )
 
 wonn_norm <- as.data.frame(

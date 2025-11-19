@@ -77,7 +77,9 @@ dev.off()
 
 png("CVA_bi_plot.png", width = 10, height = 5, units = "in", res = 300)
 
-fit <- manova(as.matrix(Data[, 2:12]) ~ sport, data = Data)
+fit <- manova(cbind(rcc, wcc, hc, hg, ferr, bmi, ssf, pcBfat, lbm, ht, wt) ~ sport,
+              data = Data)
+
 cva_out <- candisc(fit)
 
 # Extract scores and loadings
@@ -102,12 +104,12 @@ cols2 <- c(
 )
 
 
-# Axis limits (auto-expanded)
+# Axis limits 
 xlim <- c(-10,4)
 ylim <- range(scores$Can2) * 1.1
 
 par(mar = c(4,4,2,2))
-# --- Plot ---
+# Plot ---
 plot(scores$Can1, scores$Can2,
      col  = cols[ Data$sport ],
      pch  = 19,
@@ -124,15 +126,15 @@ for(s in sports) {
   this_group <- scores[scores$sport == s, ]
   
   dataEllipse(this_group$Can1, this_group$Can2,
-              levels = 0.68,    # 1 SD-style ellipse
+              levels = 0.68,   
               add = TRUE,
-              col = cols[s],     # matching colour
+              col = cols[s],   
               plot.points = FALSE,
               lwd = 2)
   
 }
 
-# Draw loadings (arrows)
+# Draw loadings
 arrow_scale <- 4   # adjust if arrows too large/small
 
 for(i in 1:nrow(loadings)) {
@@ -151,7 +153,7 @@ text(loadings[,1] * arrow_scale,
 # Compute centroid positions for each sport
 centroids <- aggregate(cbind(Can1, Can2) ~ sport, data = scores, mean)
 
-# Add centroids as large black outlined points
+# Add centroids 
 points(centroids$Can1, centroids$Can2,
        pch = 4, col = cols2,lwd = 4, cex = 2)
 
